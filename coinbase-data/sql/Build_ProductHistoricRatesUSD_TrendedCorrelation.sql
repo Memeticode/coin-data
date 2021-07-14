@@ -1,5 +1,8 @@
 use CoinData;
+
 go
+
+--DROP table dbo.ProductHistoricRatesUSD_TrendedCorrelation
 
 create table dbo.ProductHistoricRatesUSD_TrendedCorrelation (
 	 product_fk						int not null foreign key references dbo.ProductUSD(id)
@@ -7,37 +10,45 @@ create table dbo.ProductHistoricRatesUSD_TrendedCorrelation (
 	,granularity_fk					int not null foreign key references dbo.RateGranularity(id)
 	,start_datetime					datetime2 not null
 	,[timestamp]					nvarchar(10) not null
-	,pct_change_est_avg_price		float not null
-	,x_pct_change_est_avg_price		float not null
-	,reg3_n							float not null
-	,reg3_x_bar						float not null
-	,reg3_x_stdev					float not null
-	,reg3_y_bar						float not null
-	,reg3_y_stdev					float not null
-	,reg3_b							float not null
-	,reg3_r							float not null
-	,reg3_rsq						float not null
-	,reg3_resid						float not null
-	,reg8_n							float not null
-	,reg8_x_bar						float not null
-	,reg8_x_stdev					float not null
-	,reg8_y_bar						float not null
-	,reg8_y_stdev					float not null
-	,reg8_b							float not null
-	,reg8_r							float not null
-	,reg8_rsq						float not null
-	,reg8_resid						float not null
-	,reg21_n						float not null
-	,reg21_x_bar					float not null
-	,reg21_x_stdev					float not null
-	,reg21_y_bar					float not null
-	,reg21_y_stdev					float not null
-	,reg21_b						float not null
-	,reg21_r						float not null
-	,reg21_rsq						float not null
-	,reg21_resid					float not null
+	,pct_change_est_avg_price		float null
+	,x_pct_change_est_avg_price		float null
+	,reg3_n							float null
+	,reg3_x_bar						float null
+	,reg3_x_stdev					float null
+	,reg3_y_bar						float null
+	,reg3_y_stdev					float null
+	,reg3_b							float null
+	,reg3_r							float null
+	,reg3_rsq						float null
+	,reg3_resid						float null
+	,reg8_n							float null
+	,reg8_x_bar						float null
+	,reg8_x_stdev					float null
+	,reg8_y_bar						float null
+	,reg8_y_stdev					float null
+	,reg8_b							float null
+	,reg8_r							float null
+	,reg8_rsq						float null
+	,reg8_resid						float null
+	,reg21_n						float null
+	,reg21_x_bar					float null
+	,reg21_x_stdev					float null
+	,reg21_y_bar					float null
+	,reg21_y_stdev					float null
+	,reg21_b						float null
+	,reg21_r						float null
+	,reg21_rsq						float null
+	,reg21_resid					float null
 	,unique(product_fk, x_product_fk, granularity_fk, [timestamp])
 );
+go
+
+select count(*) cnt
+, count(distinct product_fk) as dist_product_fk
+, count(distinct x_product_fk) as dist_x_product_fk
+, count(distinct granularity_fk) as dist_granularity_fk
+from dbo.ProductHistoricRatesUSD_TrendedCorrelation
+;
 go
 
 With RegMetrics1 as (
@@ -101,9 +112,12 @@ With RegMetrics1 as (
 )
 , RegMetrics2 as (
 	select a.*
-		,reg3_r		= ( (a.reg3_n * a.reg3_xy_sum) - (a.reg3_x_sum * a.reg3_y_sum) ) / NULLIF( SQRT( ( (a.reg3_n * a.reg3_xsq_sum) - square(a.reg3_x_sum) ) * ( (a.reg3_n * a.reg3_ysq_sum) - square(a.reg3_y_sum) ) ), 0)
-		,reg8_r		= ( (a.reg8_n * a.reg8_xy_sum) - (a.reg8_x_sum * a.reg8_y_sum) ) / NULLIF( SQRT( ( (a.reg8_n * a.reg8_xsq_sum) - square(a.reg8_x_sum) ) * ( (a.reg8_n * a.reg8_ysq_sum) - square(a.reg8_y_sum) ) ), 0)
-		,reg21_r	= ( (a.reg21_n * a.reg21_xy_sum) - (a.reg21_x_sum * a.reg21_y_sum) ) / NULLIF( SQRT( ( (a.reg21_n * a.reg21_xsq_sum) - square(a.reg21_x_sum) ) * ( (a.reg21_n * a.reg21_ysq_sum) - square(a.reg21_y_sum) ) ), 0)
+		,reg3_r		=  case when ( (a.reg3_n * a.reg3_xsq_sum) - square(a.reg3_x_sum) ) * ( (a.reg3_n * a.reg3_ysq_sum) - square(a.reg3_y_sum) ) <= 0 then null
+							else ( (a.reg3_n * a.reg3_xy_sum) - (a.reg3_x_sum * a.reg3_y_sum) ) / SQRT( ( (a.reg3_n * a.reg3_xsq_sum) - square(a.reg3_x_sum) ) * ( (a.reg3_n * a.reg3_ysq_sum) - square(a.reg3_y_sum) ) ) end
+		,reg8_r		=  case when ( (a.reg8_n * a.reg8_xsq_sum) - square(a.reg8_x_sum) ) * ( (a.reg8_n * a.reg8_ysq_sum) - square(a.reg8_y_sum) ) <= 0 then null
+							else ( (a.reg8_n * a.reg8_xy_sum) - (a.reg8_x_sum * a.reg8_y_sum) ) / SQRT( ( (a.reg8_n * a.reg8_xsq_sum) - square(a.reg8_x_sum) ) * ( (a.reg8_n * a.reg8_ysq_sum) - square(a.reg8_y_sum) ) ) end
+		,reg21_r		=  case when ( (a.reg21_n * a.reg21_xsq_sum) - square(a.reg21_x_sum) ) * ( (a.reg21_n * a.reg21_ysq_sum) - square(a.reg21_y_sum) ) <= 0 then null
+							else ( (a.reg21_n * a.reg21_xy_sum) - (a.reg21_x_sum * a.reg21_y_sum) ) / SQRT( ( (a.reg21_n * a.reg21_xsq_sum) - square(a.reg21_x_sum) ) * ( (a.reg21_n * a.reg21_ysq_sum) - square(a.reg21_y_sum) ) ) end
 	from RegMetrics1 a
 )
 , RegMetrics3 as (
