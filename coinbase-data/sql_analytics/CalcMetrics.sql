@@ -21,10 +21,12 @@ begin
 end
 go
 
-create function dbo.fnPctChangePrice(@price1 decimal(26,8), @price2 decimal(26,8))
-returns decimal(26,8)
+alter function dbo.fnPctChangePrice(@price1 decimal(26,8), @price2 decimal(26,8))
+returns float
 begin
-	return (@price2 - @price1) / @price1
+	return case when @price1 is null then null
+				when @price1 =0 then 0 
+				else (@price2 - @price1) / @price1 end
 end
 go
 

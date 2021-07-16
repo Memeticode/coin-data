@@ -11,11 +11,22 @@
 	-- other trading volume
 	-- other interval price variance
 
+/*
+	forecasted price = 
+		constant
+		+ B1 (price t-1)
+		+ B2 (volume t-1)
+		+ B3 (variance t-1)
+
+		+ unobserved term
+
+*/
 
 
 use CoinData;
 go
 
+-- Try using logs for better results
 create table dbo.ProductHistoricRatesUSD_RegressionInputs (
 	product_fk int not null foreign key references dbo.ProductUSD(id),
 	granularity_fk int not null foreign key references dbo.RateGranularity(id),
@@ -31,6 +42,7 @@ create table dbo.ProductHistoricRatesUSD_RegressionInputs (
 );
 go
 
+-- 33,568,060
 
 select 
 	(select count(*) from dbo.ProductHistoricRatesUSD) as orig_metrics,
@@ -73,10 +85,4 @@ insert into dbo.ProductHistoricRatesUSD_RegressionInputs
 go
 
 
-
-
-select 
-	(select count(*) from dbo.ProductHistoricRatesUSD) as orig_metrics,
-	(select count(*) from dbo.ProductHistoricRatesUSD_RegressionInputs) as reg_metrics
-go
 

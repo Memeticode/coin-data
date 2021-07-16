@@ -43,13 +43,8 @@ create table dbo.ProductHistoricRatesUSD_TrendedCorrelation (
 );
 go
 
-select count(*) cnt
-, count(distinct product_fk) as dist_product_fk
-, count(distinct x_product_fk) as dist_x_product_fk
-, count(distinct granularity_fk) as dist_granularity_fk
-from dbo.ProductHistoricRatesUSD_TrendedCorrelation
-;
-go
+ALTER PROCEDURE dbo.uspLoad_ProductHistoricRatesUSD_TrendedCorrelation (@product_fk int, @granularity_fk int) as
+begin
 
 With RegMetrics1 as (
 	select
@@ -109,6 +104,8 @@ With RegMetrics1 as (
 	where 1=1
 	and a.pct_change_est_avg_price is not null
 	and b.pct_change_est_avg_price is not null
+	and a.product_fk = @product_fk
+	and a.granularity_fk = @granularity_fk
 )
 , RegMetrics2 as (
 	select a.*
@@ -196,14 +193,23 @@ select
 
 from RegMetrics6 a
 order by a.[timestamp] desc
--- rsq
+end;
 
 go
 
-select count(*) cnt
+select product_fk
+, x_product_fk
+, granularity_fk
+, count(*) cnt
 , count(distinct product_fk) as dist_product_fk
 , count(distinct x_product_fk) as dist_x_product_fk
 , count(distinct granularity_fk) as dist_granularity_fk
 from dbo.ProductHistoricRatesUSD_TrendedCorrelation
+group by product_fk
+, x_product_fk
+, granularity_fk
+order by product_fk
+, x_product_fk
+, granularity_fk
 ;
 go
