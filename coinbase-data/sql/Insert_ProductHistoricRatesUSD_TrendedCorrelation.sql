@@ -15,6 +15,9 @@ order by a.product_fk
 ;
 go
 
+
+-- Identify last run product and granularity
+
 select a.product_fk
 --, a.granularity_fk
 , count(*) cnt
@@ -64,7 +67,11 @@ order by a.product_fk
 ;
 go
 
+
+
+
 -- Run Product and Granularity
+
 declare 
 @granularity nvarchar(10)
 , @product nvarchar(5)	
