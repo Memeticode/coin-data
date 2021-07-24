@@ -1,6 +1,9 @@
 use CoinData;
 go
 
+drop TABLE dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss
+;
+go
 
 CREATE TABLE dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss (
 	[product_fk] [int] NOT NULL foreign key references dbo.ProductUSD(id)
@@ -210,15 +213,17 @@ go
 
 
 select 
-	b.product_fk
+	b.product_fk, a.product
 	, count(*) num_records
-	, sum(b.is_gain_opportunity) as num_gain_opp
+	, sum(case when b.is_gain_opportunity = 1 then 1 else 0 end) as num_gain_opp
+	, sum(case when b.is_gain_opportunity = 1 then 1.0 else 0 end)/sum(1.0) as pct_gain_opp
 	, min(b.[timestamp]) as [min_timestamp]
+	, max(b.[timestamp]) as [max_timestamp]
 	, min(b.start_datetime) as min_dt
+	, max(b.start_datetime) as max_dt
 from dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss b
-group by
-	b.product_fk
-with cube
+join dbo.ProductUSD a on b.product_fk = a.id
+group by grouping sets ((), (b.product_fk, a.product))
 order by b.product_fk
 ;
 go
