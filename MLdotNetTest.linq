@@ -11,15 +11,14 @@ void Main()
 	var context = new Microsoft.ML.MLContext(seed: 0);
 
 	IDataView data = GetDataCsv(context);
-	
 	DataOperationsCatalog.TrainTestData dataSplit = context.Data.TrainTestSplit(data, testFraction: 0.5);
 	IDataView trainData = dataSplit.TrainSet;
 	IDataView testData = dataSplit.TestSet;
-	
 	var features = dataSplit.TrainSet.Schema
 		.Select(col => col.Name)
 		.Where(colName => colName != "Label")
 		.ToArray();
+
 
 	var pipeline = context.Transforms.Concatenate("Features", features)
 		.Append(context.BinaryClassification.Trainers.SdcaLogisticRegression())
