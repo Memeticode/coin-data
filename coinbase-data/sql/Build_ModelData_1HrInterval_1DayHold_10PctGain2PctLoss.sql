@@ -1,7 +1,7 @@
 use CoinData;
 go
 
-drop TABLE dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss
+--drop TABLE dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss
 ;
 go
 
@@ -10,29 +10,63 @@ CREATE TABLE dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss (
 	, is_gain_opportunity				 bit not null
 	, [timestamp]						[nvarchar](10) NOT NULL
 	, [start_datetime]					[datetime2] NOT NULL
-	, pct_change_est_avg_price			float not null
-	, pct_change_est_avg_trade_volume	float not null
-	, sma8_pct_diff						float not null
-	, sma21_pct_diff					float not null
-	, sma55_pct_diff					float not null
-	, sma89_pct_diff					float not null
-	, sma144_pct_diff					float not null
-	, btc_change_est_avg_price			float not null
-	, btc_change_est_avg_trade_volume	float not null
-	, btc_sma8_pct_diff					float not null
-	, btc_sma21_pct_diff				float not null
-	, btc_sma55_pct_diff				float not null
-	, btc_sma89_pct_diff				float not null
-	, btc_sma144_pct_diff				float not null
-	, btc_reg3_b						float not null
-	, btc_reg3_rsq						float not null
-	, btc_reg3_resid					float not null
-	, btc_reg8_b						float not null
-	, btc_reg8_rsq						float not null
-	, btc_reg8_resid					float not null
-	, btc_reg21_b						float not null
-	, btc_reg21_rsq						float not null
-	, btc_reg21_resid					float not null
+	, pct_change_est_avg_price			real not null
+	, pct_change_est_avg_trade_volume	real not null
+	, sma8_pct_diff						real not null
+	, sma21_pct_diff					real not null
+	, sma55_pct_diff					real not null
+	, sma89_pct_diff					real not null
+	, sma144_pct_diff					real not null
+	, btc_change_est_avg_price			real not null
+	, btc_change_est_avg_trade_volume	real not null
+	, btc_sma8_pct_diff					real not null
+	, btc_sma21_pct_diff				real not null
+	, btc_sma55_pct_diff				real not null
+	, btc_sma89_pct_diff				real not null
+	, btc_sma144_pct_diff				real not null
+	, btc_reg3_b						real not null
+	, btc_reg3_rsq						real not null
+	, btc_reg3_resid					real not null
+	, btc_reg8_b						real not null
+	, btc_reg8_rsq						real not null
+	, btc_reg8_resid					real not null
+	, btc_reg21_b						real not null
+	, btc_reg21_rsq						real not null
+	, btc_reg21_resid					real not null
+);
+go
+
+
+SELECT
+	-- [product_fk] 
+	  is_gain_opportunity				
+	--, [timestamp]						
+	--, [start_datetime]					
+	, pct_change_est_avg_price			
+	, pct_change_est_avg_trade_volume	
+	, sma8_pct_diff						
+	, sma21_pct_diff					
+	, sma55_pct_diff					
+	, sma89_pct_diff					
+	, sma144_pct_diff					
+	, btc_change_est_avg_price			
+	, btc_change_est_avg_trade_volume	
+	, btc_sma8_pct_diff					
+	, btc_sma21_pct_diff				
+	, btc_sma55_pct_diff				
+	, btc_sma89_pct_diff				
+	, btc_sma144_pct_diff				
+	, btc_reg3_b						
+	, btc_reg3_rsq						
+	, btc_reg3_resid					
+	, btc_reg8_b						
+	, btc_reg8_rsq						
+	, btc_reg8_resid					
+	, btc_reg21_b						
+	, btc_reg21_rsq						
+	, btc_reg21_resid		
+FROM dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss 
+
 );
 go
 

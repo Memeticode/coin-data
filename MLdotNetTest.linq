@@ -10,7 +10,8 @@ void Main()
 {
 	var context = new Microsoft.ML.MLContext(seed: 0);
 
-	IDataView data = GetDataCsv(context);
+	//IDataView data = GetDataCsv(context);
+	IDataView data = GetDataDb(context);
 	DataOperationsCatalog.TrainTestData dataSplit = context.Data.TrainTestSplit(data, testFraction: 0.5);
 	IDataView trainData = dataSplit.TrainSet;
 	IDataView testData = dataSplit.TestSet;
@@ -30,7 +31,9 @@ void Main()
 
 	var metrics = context.BinaryClassification.Evaluate(predictions);
 	
+	//Console.WriteLine(metrics.ConfusionMatrix);
 	metrics.Dump();
+	
 
 }
 
@@ -77,6 +80,7 @@ public static IDataView GetDataDb(MLContext context)
 	DatabaseSource dbSource = new DatabaseSource(SqlClientFactory.Instance, cnxn, cmnd);
 
 	IDataView data = loader.Load(dbSource);
+	
 	
 	return data;
 }
