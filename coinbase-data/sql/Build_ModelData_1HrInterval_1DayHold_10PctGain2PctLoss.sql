@@ -67,7 +67,6 @@ SELECT
 	, btc_reg21_resid		
 FROM dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss 
 
-);
 go
 
 
@@ -262,3 +261,31 @@ order by b.product_fk
 ;
 go
 
+		SELECT top 1 timestamp,
+			is_gain_opportunity	as Label		
+			, pct_change_est_avg_price			
+			, pct_change_est_avg_trade_volume	
+			, sma8_pct_diff						
+			, sma21_pct_diff					
+			, sma55_pct_diff					
+			, sma89_pct_diff					
+			, sma144_pct_diff					
+			, btc_change_est_avg_price			
+			, btc_change_est_avg_trade_volume	
+			, btc_sma8_pct_diff					
+			, btc_sma21_pct_diff				
+			, btc_sma55_pct_diff				
+			, btc_sma89_pct_diff				
+			, btc_sma144_pct_diff				
+			, btc_reg3_b						
+			, btc_reg3_rsq						
+			, btc_reg3_resid					
+			, btc_reg8_b						
+			, btc_reg8_rsq						
+			, btc_reg8_resid					
+			, btc_reg21_b						
+			, btc_reg21_rsq						
+			, btc_reg21_resid		
+		FROM dbo.ModelData_1HrInterval_1DayHold_10PctGain2PctLoss 	
+		where Product_fk = 51 -- exclude ren
+		and is_gain_opportunity = 1
